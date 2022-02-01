@@ -1,0 +1,91 @@
+CRC for several CPUs and languages
+==================================
+2012-05-03
+
+
+Files
+-----
+
+Makefile	generates the emulator version, starts the 
+		simulator of BASIC crc16
+
+crc16-6809.asm	CRC16 implementation for the 6809 cpu
+
+crc16.bas	Source or runable with simulatore "cbmbasic"
+		optimized XOR function (in FN XR()) and with
+		constants placed in variables.
+
+crc16.prg	run-time of crc16.bas for use in an emulator
+		see Makefile
+
+crc16a.bas	First version
+
+crc16b.bas	FN IC() - Interger Correction function
+
+info.txt	this text
+
+
+
+
+Data and evaluation
+-------------------
+
+26,"ZYXWVUTSRQPONMLKJIHGFEDBCA"
+        ; x-modem: CRC=$B199
+	; C64 TI=279 (XR()= inline, constants->variables )
+	; C64 TI=297 (XR()= ... - ..., constants->variables )
+	; C64 TI=396 (2080, 2310: XR() inline instead of FN XR() )
+	; C64 TI=412 (XR()= ... - ... )
+	; C64 TI=429 (XR()= ... AND NOT ... )
+	; C64 TI=421 (2130 NEXT:NEXT:RETURN)
+
+19,"An Arbitrary String"
+        ; x-modem: CRC=$DDFC
+	; C64 TI=210 (XR()= inline, constants->variables )
+	; C64 TI=228 (XR()= ... - ..., constants->variables )
+	; C64 TI=308 (XR()= ... - ... )
+	; C64 TI=316 (2130 NEXT:NEXT:RETURN)
+
+
+The DEF FN version of the XOR function is approx. 10 % slower than
+the inline-version.
+The XOR implementation with "-" operator instead "AND NOT" shortens
+the execution time by additional 4 %.
+
+Best optimization performance can be gathered by using
+variables for constant values:
+	-32768 -> IM (negative integer limit)
+	+32767 -> IP (positve integer limit)
+	65536  -> IA (absolute integer limit)
+
+
+
+
+
+crc16.bas
+---------
+
+### Run with cbmbasic simulator
+
+make run
+# or
+cbmbasic crc16.bas
+
+
+### Run with C64 Vice emulator
+
+make
+x64 crc16.prg
+
+
+
+Measurement
+- - - - - -
+
+See above!
+
+Program 	1/60s	Remark
+------------------------------------------------------------------------
+crc16.prg	283	without output, using inline XOR function
+crc16.prg	298	without output, using DEF FN XR function for XOR
+
