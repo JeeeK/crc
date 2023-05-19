@@ -15,6 +15,13 @@ crc16.bas	Source or runable with simulatore "cbmbasic"
 		optimized XOR function (in FN XR()) and with
 		constants placed in variables.
 
+crc16.dragon.bas
+		Port of crc16.bas into DECB
+		(using TIMER, HEX$())
+
+crc16.dragon.cas
+		Cassette-Input-Binary of crc16.dragon.bas
+
 crc16.prg	run-time of crc16.bas for use in an emulator
 		see Makefile
 
@@ -32,20 +39,26 @@ Data and evaluation
 
 26,"ZYXWVUTSRQPONMLKJIHGFEDBCA"
         ; x-modem: CRC=$B199
-	; C64 TI=279 (XR()= inline, constants->variables )
-	; C64 TI=297 (XR()= ... - ..., constants->variables )
-	; C64 TI=396 (2080, 2310: XR() inline instead of FN XR() )
-	; C64 TI=412 (XR()= ... - ... )
-	; C64 TI=429 (XR()= ... AND NOT ... )
-	; C64 TI=421 (2130 NEXT:NEXT:RETURN)
+	; C64 TI=279 4.65 s (XR()= inline, constants->variables )
+	; C64 TI=297 4.95 s (XR()= ... - ..., constants->variables )
+	; C64 TI=396 6.60 s (2080, 2310: XR() inline instead of FN XR() )
+	; C64 TI=412 6.86 s (XR()= ... - ... )
+	; C64 TI=429 7.15 s (XR()= ... AND NOT ... )
+	; C64 TI=421 7.02 s (2130 NEXT:NEXT:RETURN)
+	; Dragon TIMER 5.12 s (XR()= inline, constants->variables )
+	; Dragon TIMER 5.52 s (XR()= ... - ..., constants->variables )
 
 19,"An Arbitrary String"
         ; x-modem: CRC=$DDFC
-	; C64 TI=210 (XR()= inline, constants->variables )
-	; C64 TI=228 (XR()= ... - ..., constants->variables )
-	; C64 TI=308 (XR()= ... - ... )
-	; C64 TI=316 (2130 NEXT:NEXT:RETURN)
+	; C64 TI=210 3.50 s (XR()= inline, constants->variables )
+	; C64 TI=228 3.80 s (XR()= ... - ..., constants->variables )
+	; C64 TI=308 5.13 s (XR()= ... - ... )
+	; C64 TI=316 5.27 s (2130 NEXT:NEXT:RETURN)
+	; Dragon TIMER 3.80 s (XR()= inline, constants->variables )
+	; Dragon TIMER 4.12 s (XR()= ... - ..., constants->variables )
 
+
+Regarding to C64 times:
 
 The DEF FN version of the XOR function is approx. 10 % slower than
 the inline-version.
@@ -67,7 +80,7 @@ crc16.bas
 
 ### Run with cbmbasic simulator
 
-make run
+make c64.cli
 # or
 cbmbasic crc16.bas
 
@@ -75,14 +88,25 @@ cbmbasic crc16.bas
 ### Run with C64 Vice emulator
 
 make
+
+make c64
+# or
 x64 crc16.prg
+
+
+crc16.dragon.bas
+----------------
+
+### Run with Xroar emulator
+
+make dragon
 
 
 
 Measurement
 - - - - - -
 
-See above!
+See above, "Data and evaluation"
 
 Program 	1/60s	Remark
 ------------------------------------------------------------------------
